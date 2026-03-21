@@ -1,0 +1,28 @@
+{
+  "users": [
+    { "id": "u1", "tenantId": "t1", "name": "Aarav Admin", "email": "admin@alphacorp.com", "role": "admin" },
+    { "id": "u2", "tenantId": "t1", "name": "Meera Manager", "email": "manager@alphacorp.com", "role": "manager" },
+    { "id": "u3", "tenantId": "t1", "name": "Anaya Singh", "email": "anaya@alphacorp.com", "role": "user" },
+    { "id": "u4", "tenantId": "t1", "name": "Ishaan Verma", "email": "ishaan@alphacorp.com", "role": "user" },
+    { "id": "u5", "tenantId": "t1", "name": "Kavya Rao", "email": "kavya@alphacorp.com", "role": "user" },
+    { "id": "u6", "tenantId": "t2", "name": "Rohan User", "email": "user@betaware.com", "role": "user" },
+    { "id": "u7", "tenantId": "t2", "name": "Sana Khan", "email": "sana@betaware.com", "role": "manager" },
+    { "id": "u8", "tenantId": "t2", "name": "Neel Joshi", "email": "neel@betaware.com", "role": "user" },
+    { "id": "u9", "tenantId": "t2", "name": "Pari Desai", "email": "pari@betaware.com", "role": "user" },
+    { "id": "u10", "tenantId": "t3", "name": "Dev Patel", "email": "dev@gammacloud.com", "role": "admin" },
+    { "id": "u11", "tenantId": "t3", "name": "Aditi Mehta", "email": "aditi@gammacloud.com", "role": "manager" }
+  ],
+  "orders": [
+    { "id": "o1001", "tenantId": "t1", "customerName": "North Star Pvt Ltd", "amount": 8500, "status": "completed", "createdAt": "2026-03-20T10:00:00Z" },
+    { "id": "o1002", "tenantId": "t1", "customerName": "Vertex Labs", "amount": 4200, "status": "pending", "createdAt": "2026-03-21T08:00:00Z" },
+    { "id": "o1003", "tenantId": "t1", "customerName": "Blue Horizon", "amount": 3000, "status": "cancelled", "createdAt": "2026-03-21T06:00:00Z" },
+    { "id": "o1004", "tenantId": "t1", "customerName": "Aster Finance", "amount": 9700, "status": "completed", "createdAt": "2026-03-19T17:30:00Z" },
+    { "id": "o1005", "tenantId": "t1", "customerName": "Nexa Retail", "amount": 2600, "status": "pending", "createdAt": "2026-03-18T12:15:00Z" },
+    { "id": "o2001", "tenantId": "t2", "customerName": "Orbit Health", "amount": 1100, "status": "completed", "createdAt": "2026-03-21T09:00:00Z" },
+    { "id": "o2002", "tenantId": "t2", "customerName": "Cloud Nine Foods", "amount": 2200, "status": "pending", "createdAt": "2026-03-20T07:00:00Z" },
+    { "id": "o2003", "tenantId": "t2", "customerName": "Pixora Studio", "amount": 790, "status": "completed", "createdAt": "2026-03-20T14:00:00Z" },
+    { "id": "o2004", "tenantId": "t2", "customerName": "Edge Analytics", "amount": 1700, "status": "cancelled", "createdAt": "2026-03-19T13:20:00Z" },
+    { "id": "o3001", "tenantId": "t3", "customerName": "Mercury Systems", "amount": 6400, "status": "completed", "createdAt": "2026-03-18T16:40:00Z" },
+    { "id": "o3002", "tenantId": "t3", "customerName": "Green Source", "amount": 2100, "status": "pending", "createdAt": "2026-03-21T04:50:00Z" }
+  ]
+}
