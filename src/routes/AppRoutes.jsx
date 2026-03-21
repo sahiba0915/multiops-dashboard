@@ -7,14 +7,9 @@ import UsersPage from '../pages/UsersPage'
 import OrdersPage from '../pages/OrdersPage'
 import NotFoundPage from '../pages/NotFoundPage'
 import { selectIsAuthenticated } from '../features/auth/authSlice'
-
-function ProtectedRoute({ children }) {
-  const isAuthenticated = useSelector(selectIsAuthenticated)
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />
-  }
-  return children
-}
+import { UnauthorizedPage } from '../pages/UnauthorizedPage'
+import ProtectedRoute from '../components/ProtectedRoute'
+import { ROLES } from '../config/constants'
 
 export default function AppRoutes() {
   const isAuthenticated = useSelector(selectIsAuthenticated)
@@ -30,9 +25,33 @@ export default function AppRoutes() {
           </ProtectedRoute>
         }
       >
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/users" element={<UsersPage />} />
-        <Route path="/orders" element={<OrdersPage />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute
+              allowedRoles={[ROLES.ADMIN, ROLES.MANAGER, ROLES.USER]}
+            >
+              <DashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.ADMIN, ROLES.MANAGER]}>
+              <UsersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute allowedRoles={[ROLES.ADMIN]}>
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="/unauthorized" element={<UnauthorizedPage />} />
       </Route>
 
       <Route
