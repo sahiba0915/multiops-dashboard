@@ -1,29 +1,20 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { apiClient } from '../../api/client'
-import { buildQueryParams } from '../../utils/query'
+import { getOrders } from '../../services/ordersService'
 import { PAGINATION } from '../../config/constants'
 
 export const fetchOrders = createAsyncThunk(
   'orders/fetchOrders',
   async ({ tenantId, page, perPage, search, status }, { rejectWithValue }) => {
     try {
-      const params = {
+      return await getOrders({
         tenantId,
-        ...buildQueryParams({
-          page,
-          perPage,
-          search,
-          status,
-          sortBy: 'createdAt',
-          order: 'desc',
-        }),
-      }
-
-      const response = await apiClient.get('/orders', { params })
-      return {
-        items: response.data.data ?? response.data,
-        total: Number(response.data.items ?? response.data.length ?? 0),
-      }
+        page,
+        perPage,
+        search,
+        status,
+        sortBy: 'createdAt',
+        order: 'desc',
+      })
     } catch (error) {
       return rejectWithValue(error.message || 'Unable to load orders')
     }

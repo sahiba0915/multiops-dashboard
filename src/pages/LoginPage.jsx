@@ -73,6 +73,8 @@ export default function LoginPage() {
               <option value="t1">Tenant t1</option>
               <option value="t2">Tenant t2</option>
               <option value="t3">Tenant t3</option>
+              <option value="t4">Tenant t4</option>
+              <option value="t5">Tenant t5</option>
             </select>
           </label>
 

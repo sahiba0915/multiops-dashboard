@@ -5,6 +5,10 @@ import { BrowserRouter } from 'react-router-dom'
 import './index.css'
 import App from './App.jsx'
 import { store } from './features/store'
+import { selectAuthToken } from './features/auth/authSlice'
+import { setAuthTokenGetter } from './services/httpClient'
+
+setAuthTokenGetter(() => selectAuthToken(store.getState()))
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

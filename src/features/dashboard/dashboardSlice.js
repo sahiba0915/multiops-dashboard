@@ -1,17 +1,15 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { apiClient } from '../../api/client'
+import { getOrdersByTenant } from '../../services/ordersService'
+import { getUsersByTenant } from '../../services/usersService'
 
 export const fetchDashboardStats = createAsyncThunk(
   'dashboard/fetchStats',
   async (tenantId, { rejectWithValue }) => {
     try {
-      const [usersRes, ordersRes] = await Promise.all([
-        apiClient.get('/users', { params: { tenantId } }),
-        apiClient.get('/orders', { params: { tenantId } }),
+      const [users, orders] = await Promise.all([
+        getUsersByTenant(tenantId),
+        getOrdersByTenant(tenantId),
       ])
-
-      const users = usersRes.data
-      const orders = ordersRes.data
       const totalRevenue = orders.reduce((acc, order) => acc + Number(order.amount || 0), 0)
       const pendingOrders = orders.filter((order) => order.status === 'pending').length
 

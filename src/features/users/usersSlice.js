@@ -1,28 +1,19 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { apiClient } from '../../api/client'
-import { buildQueryParams } from '../../utils/query'
+import { getUsers } from '../../services/usersService'
 import { PAGINATION } from '../../config/constants'
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
   async ({ tenantId, page, perPage, search }, { rejectWithValue }) => {
     try {
-      const params = {
+      return await getUsers({
         tenantId,
-        ...buildQueryParams({
-          page,
-          perPage,
-          search,
-          sortBy: 'name',
-          order: 'asc',
-        }),
-      }
-
-      const response = await apiClient.get('/users', { params })
-      return {
-        items: response.data.data ?? response.data,
-        total: Number(response.data.items ?? response.data.length ?? 0),
-      }
+        page,
+        perPage,
+        search,
+        sortBy: 'name',
+        order: 'asc',
+      })
     } catch (error) {
       return rejectWithValue(error.message || 'Unable to load users')
     }
