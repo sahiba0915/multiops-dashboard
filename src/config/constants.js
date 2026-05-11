@@ -10,6 +10,12 @@ export const ROLE_LABELS = {
   [ROLES.USER]: 'User',
 }
 
+export const ROLE_ROUTE_ACCESS = {
+  [ROLES.ADMIN]: ['/dashboard', '/users', '/orders'],
+  [ROLES.MANAGER]: ['/dashboard', '/users'],
+  [ROLES.USER]: ['/dashboard'],
+}
+
 export const PERMISSIONS = {
   VIEW_DASHBOARD: 'view:dashboard',
   VIEW_USERS: 'view:users',
