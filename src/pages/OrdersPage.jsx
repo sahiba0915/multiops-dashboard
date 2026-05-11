@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { DataTable } from '../components/common/DataTable'
 import { Pagination } from '../components/common/Pagination'
 import { selectTenantId } from '../features/auth/authSlice'
+import { selectCurrencyRegion } from '../features/deviceLocale/deviceLocaleSlice'
 import {
   fetchOrders,
   selectOrders,
@@ -10,10 +11,12 @@ import {
   setOrdersSearch,
   setOrdersStatus,
 } from '../features/orders/ordersSlice'
+import { formatCurrency } from '../utils/localeCurrency'
 
 export default function OrdersPage() {
   const dispatch = useDispatch()
   const tenantId = useSelector(selectTenantId)
+  const currencyRegion = useSelector(selectCurrencyRegion)
   const { items, total, page, perPage, search, status, isLoading, error } = useSelector(selectOrders)
   const [localSearch, setLocalSearch] = useState(search)
 
@@ -28,7 +31,7 @@ export default function OrdersPage() {
     {
       key: 'amount',
       label: 'Amount',
-      render: (row) => `$${Number(row.amount).toLocaleString()}`,
+      render: (row) => formatCurrency(Number(row.amount), { region: currencyRegion }),
     },
     { key: 'status', label: 'Status' },
     {

@@ -6,9 +6,11 @@ import './index.css'
 import App from './App.jsx'
 import { store } from './features/store'
 import { selectAuthToken } from './features/auth/authSlice'
+import { detectDeviceRegion } from './features/deviceLocale/deviceLocaleSlice'
 import { setAuthTokenGetter } from './services/httpClient'
 
 setAuthTokenGetter(() => selectAuthToken(store.getState()))
+store.dispatch(detectDeviceRegion())
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

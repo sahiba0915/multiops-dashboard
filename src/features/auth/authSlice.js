@@ -31,7 +31,8 @@ const initialState = {
 
 const persistedAuth = readPersistedAuth()
 if (persistedAuth) {
-  initialState.currentUser = persistedAuth.currentUser
+  const { region: _legacyRegion, ...restUser } = persistedAuth.currentUser || {}
+  initialState.currentUser = { ...fallbackUser, ...restUser }
   initialState.token = persistedAuth.token
   initialState.isAuthenticated = true
 }
@@ -42,10 +43,11 @@ const persistAuth = (state) => {
       localStorage.removeItem(AUTH_STORAGE_KEY)
       return
     }
+    const { region: _r, ...currentUser } = state.currentUser
     localStorage.setItem(
       AUTH_STORAGE_KEY,
       JSON.stringify({
-        currentUser: state.currentUser,
+        currentUser,
         token: state.token,
       }),
     )
@@ -78,7 +80,14 @@ const authSlice = createSlice({
       persistAuth(state)
     },
     switchContext(state, action) {
-      state.currentUser = action.payload
+      const p = action.payload
+      state.currentUser = {
+        id: p.id,
+        name: p.name,
+        email: p.email,
+        tenantId: p.tenantId,
+        role: p.role,
+      }
       if (state.isAuthenticated) {
         persistAuth(state)
       }
