@@ -14,16 +14,19 @@ export default function Topbar() {
   }
 
   return (
-    <header className="h-16 border-b border-slate-200 bg-white px-6 flex items-center justify-between">
-      <h1 className="text-lg font-semibold text-slate-800">Admin Panel</h1>
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-slate-500">
-          {currentUser.email} | {ROLE_LABELS[currentUser.role]} | {currentUser.tenantId}
+    <header className="flex min-h-[3.5rem] flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-2 sm:min-h-16 sm:px-6 sm:py-0">
+      <h1 className="shrink-0 text-base font-semibold text-slate-800 sm:text-lg">Admin Panel</h1>
+      <div className="flex min-w-0 max-w-full flex-1 basis-[100%] flex-wrap items-center justify-end gap-2 sm:basis-auto sm:gap-3">
+        <span className="min-w-0 truncate text-right text-xs text-slate-500 sm:text-sm">
+          <span className="hidden sm:inline">
+            {currentUser.email} · {ROLE_LABELS[currentUser.role]} · {currentUser.tenantId}
+          </span>
+          <span className="sm:hidden">{currentUser.tenantId}</span>
         </span>
         <button
           type="button"
           onClick={onLogout}
-          className="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-100"
+          className="shrink-0 rounded-md border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-100 sm:py-1.5"
         >
           Logout
         </button>

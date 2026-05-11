@@ -14,6 +14,7 @@ export const fetchDashboardStats = createAsyncThunk(
       const pendingOrders = orders.filter((order) => order.status === 'pending').length
 
       return {
+        tenantId,
         usersCount: users.length,
         ordersCount: orders.length,
         pendingOrders,
