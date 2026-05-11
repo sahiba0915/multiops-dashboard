@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "server": "json-server --watch mock/db.json --port 4000",
+    "db:generate": "node scripts/generate-mock-db.mjs",
+    "server": "json-server mock/db.json -p 4000",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
