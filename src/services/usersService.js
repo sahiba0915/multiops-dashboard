@@ -2,10 +2,10 @@ import { httpClient } from './httpClient'
 import { buildListQueryParams } from '../utils/query'
 
 /**
- * @param {{ tenantId: string; page: number; perPage: number; search?: string; sortBy?: string; order?: string }} args
+ * @param {{ tenantId: string; page: number; perPage: number; search?: string; role?: string; sortBy?: string; order?: string }} args
  */
 export async function getUsers(args) {
-  const { tenantId, page, perPage, search, sortBy = 'name', order = 'asc' } = args
+  const { tenantId, page, perPage, search, role, sortBy = 'name', order = 'asc' } = args
   const params = {
     tenantId,
     ...buildListQueryParams({
@@ -13,6 +13,7 @@ export async function getUsers(args) {
       perPage,
       search,
       searchContainsField: 'name',
+      role,
       sortBy,
       order,
     }),
