@@ -67,4 +67,19 @@ const ordersSlice = createSlice({
 export const { setOrdersPage, setOrdersSearch, setOrdersStatus } = ordersSlice.actions
 export const selectOrders = (state) => state.orders
 
+/** Shallow-friendly view for list UI (use with `shallowEqual` in useSelector). */
+export const selectOrdersView = (state) => {
+  const o = state.orders
+  return {
+    items: o.items,
+    total: o.total,
+    page: o.page,
+    perPage: o.perPage,
+    search: o.search,
+    status: o.status,
+    isLoading: o.isLoading,
+    error: o.error,
+  }
+}
+
 export default ordersSlice.reducer
