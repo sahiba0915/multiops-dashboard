@@ -1,3 +1,12 @@
+/** Workspace identifiers aligned with mock API (`tenantId`). */
+export const TENANTS = [
+  { id: 't1', label: 'Acme Corp' },
+  { id: 't2', label: 'Northwind' },
+  { id: 't3', label: 'Globex' },
+  { id: 't4', label: 'Initech' },
+  { id: 't5', label: 'Umbrella' },
+]
+
 export const ROLES = {
   ADMIN: 'admin',
   MANAGER: 'manager',

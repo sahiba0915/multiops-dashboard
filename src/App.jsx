@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom'
 import AppRoutes from './routes/AppRoutes'
 import ErrorBoundary from './components/ErrorBoundary'
 import GlobalApiErrorBanner from './components/GlobalApiErrorBanner'
+import ThemeSync from './components/ThemeSync'
 
 function App() {
   const location = useLocation()
@@ -17,6 +18,7 @@ function App() {
 
   return (
     <div className="flex min-h-screen flex-col">
+      <ThemeSync />
       <GlobalApiErrorBanner />
       <ErrorBoundary resetKeys={errorBoundaryResetKeys}>
         <AppRoutes />

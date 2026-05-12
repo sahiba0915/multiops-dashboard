@@ -3,15 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchDashboardStats, selectDashboard } from '../features/dashboard/dashboardSlice'
 import { selectCurrentUser, selectTenantId } from '../features/auth/authSlice'
 import { selectCurrencyRegion, selectDeviceLocale } from '../features/deviceLocale/deviceLocaleSlice'
-import { ROLE_LABELS } from '../config/constants'
+import { selectEffectiveTheme } from '../features/theme/themeSlice'
+import { DashboardCharts } from '../components/DashboardCharts'
+import { RoleBadge } from '../components/RoleBadge'
 import { formatCurrency, getRegionalCurrencyMeta } from '../utils/localeCurrency'
 
 const StatCardSkeleton = memo(function StatCardSkeleton() {
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-6">
-      <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
-      <div className="mt-4 h-8 w-20 animate-pulse rounded bg-slate-200 sm:h-9" />
-      <div className="mt-2 h-3 w-32 animate-pulse rounded bg-slate-100" />
+    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-700/80 dark:bg-slate-900/50 sm:p-6">
+      <div className="h-3 w-24 animate-pulse rounded bg-slate-200 dark:bg-slate-700" />
+      <div className="mt-4 h-8 w-20 animate-pulse rounded bg-slate-200 dark:bg-slate-700 sm:h-9" />
+      <div className="mt-2 h-3 w-32 animate-pulse rounded bg-slate-100 dark:bg-slate-800" />
     </div>
   )
 })
@@ -65,29 +67,29 @@ function IconClock(props) {
 const StatCard = memo(function StatCard({ label, value, hint, icon, accent }) {
   const Icon = icon
   const accentRing = {
-    indigo: 'ring-indigo-500/10',
-    emerald: 'ring-emerald-500/10',
-    amber: 'ring-amber-500/10',
-    violet: 'ring-violet-500/10',
+    indigo: 'ring-indigo-500/10 dark:ring-indigo-400/15',
+    emerald: 'ring-emerald-500/10 dark:ring-emerald-400/15',
+    amber: 'ring-amber-500/10 dark:ring-amber-400/15',
+    violet: 'ring-violet-500/10 dark:ring-violet-400/15',
   }[accent]
   const iconBg = {
-    indigo: 'bg-indigo-50 text-indigo-600',
-    emerald: 'bg-emerald-50 text-emerald-600',
-    amber: 'bg-amber-50 text-amber-600',
-    violet: 'bg-violet-50 text-violet-600',
+    indigo: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/55 dark:text-indigo-300',
+    emerald: 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/55 dark:text-emerald-300',
+    amber: 'bg-amber-50 text-amber-600 dark:bg-amber-950/55 dark:text-amber-300',
+    violet: 'bg-violet-50 text-violet-600 dark:bg-violet-950/55 dark:text-violet-300',
   }[accent]
 
   return (
     <div
-      className={`group relative min-w-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm ring-1 sm:p-6 ${accentRing} transition hover:shadow-md`}
+      className={`group relative min-w-0 overflow-hidden rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm ring-1 dark:border-slate-700/80 dark:bg-slate-900/50 sm:p-6 ${accentRing} transition hover:shadow-md dark:hover:shadow-slate-900/50`}
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium text-slate-500 sm:text-sm">{label}</p>
-          <p className="mt-1.5 break-words text-2xl font-semibold tracking-tight text-slate-900 tabular-nums sm:mt-2 sm:text-3xl">
+          <p className="text-xs font-medium text-slate-500 dark:text-slate-400 sm:text-sm">{label}</p>
+          <p className="mt-1.5 break-words text-2xl font-semibold tracking-tight text-slate-900 tabular-nums dark:text-slate-50 sm:mt-2 sm:text-3xl">
             {value}
           </p>
-          {hint ? <p className="mt-1 text-xs text-slate-500">{hint}</p> : null}
+          {hint ? <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{hint}</p> : null}
         </div>
         <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl sm:h-11 sm:w-11 ${iconBg}`}>
           <Icon className="h-5 w-5" />
@@ -106,6 +108,7 @@ export default function DashboardPage() {
   const currentUser = useSelector(selectCurrentUser)
   const currencyRegion = useSelector(selectCurrencyRegion)
   const deviceLocale = useSelector(selectDeviceLocale)
+  const effectiveTheme = useSelector(selectEffectiveTheme)
   const { stats, isLoading, error } = useSelector(selectDashboard)
 
   useEffect(() => {
@@ -116,7 +119,6 @@ export default function DashboardPage() {
   const statsMatchTenant = stats?.tenantId === tenantId
   /** Covers first paint, pending fetch, and tenant switch while in flight */
   const showSkeleton = !statsMatchTenant && (isLoading || (!error && !stats))
-  const roleLabel = currentUser?.role ? ROLE_LABELS[currentUser.role] ?? currentUser.role : '—'
 
   // `getRegionalCurrencyMeta` allocates objects; memoize on region so StatCard hint props
   // don’t get fresh object identities every parent render.
@@ -150,7 +152,7 @@ export default function DashboardPage() {
   if (!tenantId) {
     return (
       <section className="mx-auto w-full max-w-6xl min-w-0">
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900 sm:px-5">
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-900 dark:border-amber-500/30 dark:bg-amber-950/40 dark:text-amber-100 sm:px-5">
           No tenant is selected for this session. Sign in again to load dashboard metrics.
         </div>
       </section>
@@ -160,22 +162,24 @@ export default function DashboardPage() {
   return (
     <section className="mx-auto w-full max-w-6xl min-w-0 space-y-6 sm:space-y-8">
       <header className="space-y-1">
-        <h1 className="text-xl font-semibold tracking-tight text-slate-900 sm:text-2xl md:text-3xl">Dashboard</h1>
-        <p className="text-sm text-slate-600 sm:text-base">
+        <h1 className="text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-50 sm:text-2xl md:text-3xl">
+          Dashboard
+        </h1>
+        <p className="text-sm text-slate-600 dark:text-slate-400 sm:text-base">
           Live metrics for your workspace, loaded from the API.
         </p>
       </header>
 
       {error ? (
         <div
-          className="flex flex-col gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"
+          className="flex flex-col gap-3 rounded-2xl border border-red-200 bg-red-50 px-4 py-4 dark:border-red-500/35 dark:bg-red-950/40 sm:flex-row sm:items-center sm:justify-between sm:px-5"
           role="alert"
         >
-          <p className="min-w-0 text-sm leading-relaxed text-red-800">{error}</p>
+          <p className="min-w-0 text-sm leading-relaxed text-red-800 dark:text-red-200">{error}</p>
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-red-900 px-4 text-sm font-medium text-white hover:bg-red-800 sm:h-auto sm:w-auto sm:py-2"
+            className="inline-flex h-11 w-full shrink-0 items-center justify-center rounded-lg bg-red-900 px-4 text-sm font-medium text-white hover:bg-red-800 dark:bg-red-700 dark:hover:bg-red-600 sm:h-auto sm:w-auto sm:py-2"
           >
             Try again
           </button>
@@ -183,12 +187,12 @@ export default function DashboardPage() {
       ) : null}
 
       <div className="grid min-w-0 gap-4 sm:gap-6 lg:grid-cols-3">
-        <div className="min-w-0 rounded-2xl border border-slate-200/80 bg-gradient-to-br from-slate-900 to-slate-800 p-4 text-white shadow-lg sm:p-6 lg:col-span-1">
+        <div className="min-w-0 rounded-2xl border border-slate-700/50 bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950 p-4 text-white shadow-lg ring-1 ring-white/10 dark:from-slate-950 dark:via-slate-900 dark:to-indigo-950 sm:p-6 lg:col-span-1">
           <div className="flex items-center gap-2 text-slate-300">
             <IconBuilding className="h-5 w-5 shrink-0 text-slate-400" />
             <span className="text-xs font-semibold uppercase tracking-wider">Tenant</span>
           </div>
-          <p className="mt-3 break-all font-mono text-base font-semibold tracking-wide text-white sm:text-lg">
+          <p className="mt-3 break-all font-mono text-base font-semibold tracking-wide text-white/95 sm:text-lg">
             {tenantId}
           </p>
           <dl className="mt-5 space-y-4 border-t border-white/10 pt-5 text-sm sm:mt-6 sm:pt-6">
@@ -198,7 +202,9 @@ export default function DashboardPage() {
             </div>
             <div>
               <dt className="text-slate-400">Role</dt>
-              <dd className="mt-0.5 font-medium text-slate-100">{roleLabel}</dd>
+              <dd className="mt-1.5">
+                <RoleBadge role={currentUser?.role} />
+              </dd>
             </div>
             <div>
               <dt className="text-slate-400">Scope</dt>
@@ -211,7 +217,7 @@ export default function DashboardPage() {
 
         <div className="min-w-0 space-y-3 sm:space-y-4 lg:col-span-2">
           {isLoading && statsMatchTenant ? (
-            <p className="text-xs font-medium text-slate-500" aria-live="polite">
+            <p className="text-xs font-medium text-slate-500 dark:text-slate-400" aria-live="polite">
               Refreshing…
             </p>
           ) : null}
@@ -258,6 +264,15 @@ export default function DashboardPage() {
           </div>
         </div>
       </div>
+
+      {statsMatchTenant && stats ? (
+        <DashboardCharts
+          ordersByStatus={stats.ordersByStatus}
+          revenueByMonth={stats.revenueByMonth}
+          currencyRegion={currencyRegion}
+          isDark={effectiveTheme === 'dark'}
+        />
+      ) : null}
     </section>
   )
 }
