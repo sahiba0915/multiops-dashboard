@@ -1,7 +1,11 @@
-import { memo } from 'react'
+import { memo, useMemo } from 'react'
 
 function PaginationComponent({ page, perPage, total, onPageChange }) {
-  const totalPages = Math.max(1, Math.ceil(total / perPage))
+  // Derived value: recompute only when pagination inputs change (not on every parent render).
+  const totalPages = useMemo(
+    () => Math.max(1, Math.ceil(total / perPage)),
+    [total, perPage],
+  )
 
   return (
     <div className="mt-4 flex items-center justify-between text-sm">
@@ -30,4 +34,6 @@ function PaginationComponent({ page, perPage, total, onPageChange }) {
   )
 }
 
+// Props are mostly primitives; memo helps when the parent re-renders but `onPageChange`
+// stays stable (e.g. from `useCallback` in the page component).
 export const Pagination = memo(PaginationComponent)

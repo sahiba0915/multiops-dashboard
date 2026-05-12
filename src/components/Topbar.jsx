@@ -1,17 +1,20 @@
+import { memo, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { logout, selectCurrentUser } from '../features/auth/authSlice'
 import { ROLE_LABELS } from '../config/constants'
 
-export default function Topbar() {
+function Topbar() {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const currentUser = useSelector(selectCurrentUser)
 
-  const onLogout = () => {
+  // Stable handler identity keeps memoized descendants from re-rendering solely
+  // because the parent recomputed an inline function.
+  const onLogout = useCallback(() => {
     dispatch(logout())
     navigate('/login', { replace: true })
-  }
+  }, [dispatch, navigate])
 
   return (
     <header className="flex min-h-[3.5rem] flex-wrap items-center justify-between gap-2 border-b border-slate-200 bg-white px-4 py-2 sm:min-h-16 sm:px-6 sm:py-0">
@@ -34,3 +37,5 @@ export default function Topbar() {
     </header>
   )
 }
+
+export default memo(Topbar)

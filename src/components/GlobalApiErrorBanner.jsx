@@ -1,17 +1,28 @@
+import { memo, useCallback, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   dismissGlobalApiError,
   selectGlobalApiError,
 } from '../features/globalApiError/globalApiErrorSlice'
 
-export default function GlobalApiErrorBanner() {
+function GlobalApiErrorBanner() {
   const dispatch = useDispatch()
   const { open, message, status, method, url } = useSelector(selectGlobalApiError)
 
-  if (!open) return null
+  const detail = useMemo(() => {
+    const detailParts = [method && status != null && `${method} ${status}`, url].filter(Boolean)
+    return detailParts.join(' · ')
+  }, [method, status, url])
 
-  const detailParts = [method && status != null && `${method} ${status}`, url].filter(Boolean)
-  const detail = detailParts.join(' · ')
+  const onDismiss = useCallback(() => {
+    dispatch(dismissGlobalApiError())
+  }, [dispatch])
+
+  const onReload = useCallback(() => {
+    window.location.reload()
+  }, [])
+
+  if (!open) return null
 
   return (
     <div
@@ -32,14 +43,14 @@ export default function GlobalApiErrorBanner() {
           <button
             type="button"
             className="rounded-md bg-amber-900 px-3 py-1.5 text-xs font-medium text-amber-50 hover:bg-amber-950 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-amber-50"
-            onClick={() => window.location.reload()}
+            onClick={onReload}
           >
             Reload page
           </button>
           <button
             type="button"
             className="rounded-md border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-950 hover:bg-amber-100 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-amber-50"
-            onClick={() => dispatch(dismissGlobalApiError())}
+            onClick={onDismiss}
           >
             Dismiss
           </button>
@@ -48,3 +59,7 @@ export default function GlobalApiErrorBanner() {
     </div>
   )
 }
+
+// Isolates banner subtree from the rest of the tree: when closed (`open` is false)
+// the early return is cheap; when open, memo avoids churn if unrelated Redux fields change.
+export default memo(GlobalApiErrorBanner)

@@ -53,6 +53,12 @@ export default function UsersPage() {
 
   const handlePageChange = useCallback((p) => dispatch(setUsersPage(p)), [dispatch])
 
+  // Same as inline `onChange`: stable reference so `select` and siblings don’t churn props unnecessarily.
+  const handleRoleChange = useCallback(
+    (e) => dispatch(setUsersRole(e.target.value)),
+    [dispatch],
+  )
+
   const handleSearchKeyDown = useCallback(
     (e) => {
       if (e.key !== 'Enter') return
@@ -97,7 +103,7 @@ export default function UsersPage() {
           <span className="mb-1 block text-xs font-medium uppercase text-slate-500">Role</span>
           <select
             value={role}
-            onChange={(e) => dispatch(setUsersRole(e.target.value))}
+            onChange={handleRoleChange}
             className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm shadow-sm focus:border-slate-500 focus:outline-none focus:ring-1 focus:ring-slate-500"
           >
             <option value="all">All roles</option>

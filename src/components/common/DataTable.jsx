@@ -1,5 +1,7 @@
 import { memo } from 'react'
 
+// Row-level memo: when the parent adds/removes/reorders rows, unchanged rows keep
+// the same `row` reference and skip reconciling every `<td>` cell.
 const DataTableRow = memo(function DataTableRow({ row, columns }) {
   return (
     <tr className="border-t border-slate-100">
@@ -45,4 +47,6 @@ function DataTableComponent({ columns, rows, isLoading, emptyLabel = 'No data fo
   )
 }
 
+// Whole table memo: skips diffing the loading/empty/table branches if props are referentially stable
+// (callers should pass `columns` from `useMemo` and stable handlers for best results).
 export const DataTable = memo(DataTableComponent)
