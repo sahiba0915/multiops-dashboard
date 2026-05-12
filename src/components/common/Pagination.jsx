@@ -8,8 +8,8 @@ function PaginationComponent({ page, perPage, total, onPageChange }) {
   )
 
   return (
-    <div className="mt-4 flex items-center justify-between text-sm">
-      <span className="text-slate-600">
+    <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm">
+      <span className="text-slate-600 dark:text-slate-400">
         Page {page} of {totalPages}
       </span>
       <div className="flex gap-2">
@@ -17,7 +17,7 @@ function PaginationComponent({ page, perPage, total, onPageChange }) {
           type="button"
           disabled={page <= 1}
           onClick={() => onPageChange(page - 1)}
-          className="rounded-md border border-slate-300 px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
         >
           Previous
         </button>
@@ -25,7 +25,7 @@ function PaginationComponent({ page, perPage, total, onPageChange }) {
           type="button"
           disabled={page >= totalPages}
           onClick={() => onPageChange(page + 1)}
-          className="rounded-md border border-slate-300 px-3 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg border border-slate-200 bg-white px-3 py-1.5 font-medium text-slate-700 shadow-sm transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
         >
           Next
         </button>
