@@ -1,6 +1,6 @@
 /**
  * Query params compatible with json-server v1 (see README: _sort uses `-field` for desc).
- * @param {{ page: number; perPage: number; search?: string; searchContainsField?: string; status?: string; sortBy?: string; order?: 'asc' | 'desc' }} opts
+ * @param {{ page: number; perPage: number; search?: string; searchContainsField?: string; status?: string; role?: string; sortBy?: string; order?: 'asc' | 'desc' }} opts
  */
 export const buildListQueryParams = ({
   page,
@@ -8,6 +8,7 @@ export const buildListQueryParams = ({
   search,
   searchContainsField,
   status,
+  role,
   sortBy,
   order,
 }) => {
@@ -26,6 +27,10 @@ export const buildListQueryParams = ({
 
   if (status && status !== 'all') {
     params.status = status
+  }
+
+  if (role && role !== 'all') {
+    params.role = role
   }
 
   return params

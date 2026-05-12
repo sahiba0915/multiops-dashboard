@@ -4,13 +4,14 @@ import { PAGINATION } from '../../config/constants'
 
 export const fetchUsers = createAsyncThunk(
   'users/fetchUsers',
-  async ({ tenantId, page, perPage, search }, { rejectWithValue }) => {
+  async ({ tenantId, page, perPage, search, role }, { rejectWithValue }) => {
     try {
       return await getUsers({
         tenantId,
         page,
         perPage,
         search,
+        role,
         sortBy: 'name',
         order: 'asc',
       })
@@ -28,6 +29,7 @@ const usersSlice = createSlice({
     page: PAGINATION.DEFAULT_PAGE,
     perPage: PAGINATION.DEFAULT_PER_PAGE,
     search: '',
+    role: 'all',
     isLoading: false,
     error: null,
   },
@@ -37,6 +39,10 @@ const usersSlice = createSlice({
     },
     setUsersSearch(state, action) {
       state.search = action.payload
+      state.page = PAGINATION.DEFAULT_PAGE
+    },
+    setUsersRole(state, action) {
+      state.role = action.payload
       state.page = PAGINATION.DEFAULT_PAGE
     },
   },
@@ -58,7 +64,7 @@ const usersSlice = createSlice({
   },
 })
 
-export const { setUsersPage, setUsersSearch } = usersSlice.actions
+export const { setUsersPage, setUsersSearch, setUsersRole } = usersSlice.actions
 export const selectUsers = (state) => state.users
 
 export default usersSlice.reducer
