@@ -1,4 +1,6 @@
-export const Pagination = ({ page, perPage, total, onPageChange }) => {
+import { memo } from 'react'
+
+function PaginationComponent({ page, perPage, total, onPageChange }) {
   const totalPages = Math.max(1, Math.ceil(total / perPage))
 
   return (
@@ -27,3 +29,5 @@ export const Pagination = ({ page, perPage, total, onPageChange }) => {
     </div>
   )
 }
+
+export const Pagination = memo(PaginationComponent)
