@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { memo, useCallback, useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDashboardStats, selectDashboard } from '../features/dashboard/dashboardSlice'
 import { selectCurrentUser, selectTenantId } from '../features/auth/authSlice'
@@ -6,7 +6,7 @@ import { selectCurrencyRegion, selectDeviceLocale } from '../features/deviceLoca
 import { ROLE_LABELS } from '../config/constants'
 import { formatCurrency, getRegionalCurrencyMeta } from '../utils/localeCurrency'
 
-function StatCardSkeleton() {
+const StatCardSkeleton = memo(function StatCardSkeleton() {
   return (
     <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm sm:p-6">
       <div className="h-3 w-24 animate-pulse rounded bg-slate-200" />
@@ -14,7 +14,7 @@ function StatCardSkeleton() {
       <div className="mt-2 h-3 w-32 animate-pulse rounded bg-slate-100" />
     </div>
   )
-}
+})
 
 function IconUsers(props) {
   return (
@@ -62,7 +62,7 @@ function IconClock(props) {
   )
 }
 
-function StatCard({ label, value, hint, icon, accent }) {
+const StatCard = memo(function StatCard({ label, value, hint, icon, accent }) {
   const Icon = icon
   const accentRing = {
     indigo: 'ring-indigo-500/10',
@@ -95,7 +95,10 @@ function StatCard({ label, value, hint, icon, accent }) {
       </div>
     </div>
   )
-}
+})
+
+// Stat cards receive stable icon components (module scope) and primitive props:
+// memo avoids re-rendering all four tiles when only one upstream value changes.
 
 export default function DashboardPage() {
   const dispatch = useDispatch()
@@ -115,25 +118,34 @@ export default function DashboardPage() {
   const showSkeleton = !statsMatchTenant && (isLoading || (!error && !stats))
   const roleLabel = currentUser?.role ? ROLE_LABELS[currentUser.role] ?? currentUser.role : '—'
 
-  const { currency: regionalCurrency, region: regionalRegion } = getRegionalCurrencyMeta({
-    region: currencyRegion,
-  })
+  // `getRegionalCurrencyMeta` allocates objects; memoize on region so StatCard hint props
+  // don’t get fresh object identities every parent render.
+  const { currency: regionalCurrency, region: regionalRegion } = useMemo(
+    () => getRegionalCurrencyMeta({ region: currencyRegion }),
+    [currencyRegion],
+  )
 
   const revenueFormatted = useMemo(() => {
     const n = statsMatchTenant ? Number(stats.totalRevenue ?? 0) : 0
     return formatCurrency(n, { region: currencyRegion, maximumFractionDigits: 0 })
   }, [stats, statsMatchTenant, currencyRegion])
 
-  const revenueHintSuffix =
-    deviceLocale.source === 'network'
-      ? ' · from network location'
-      : deviceLocale.status === 'loading'
-        ? ' · detecting…'
-        : ' · from browser locale'
+  // Locale hint string only depends on device locale fields — memoized so StatCard props
+  // stay stable when unrelated dashboard slice fields update.
+  const revenueHintSuffix = useMemo(
+    () =>
+      deviceLocale.source === 'network'
+        ? ' · from network location'
+        : deviceLocale.status === 'loading'
+          ? ' · detecting…'
+          : ' · from browser locale',
+    [deviceLocale.source, deviceLocale.status],
+  )
 
-  const onRetry = () => {
+  // Error UI `onClick` stays referentially stable across stats polling / re-renders.
+  const onRetry = useCallback(() => {
     if (tenantId) dispatch(fetchDashboardStats(tenantId))
-  }
+  }, [dispatch, tenantId])
 
   if (!tenantId) {
     return (

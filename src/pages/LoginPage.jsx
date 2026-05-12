@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Navigate, useNavigate } from 'react-router-dom'
 import { loginSuccess, selectIsAuthenticated } from '../features/auth/authSlice'
@@ -13,19 +13,23 @@ export default function LoginPage() {
   const [role, setRole] = useState(ROLES.USER)
   const [tenantId, setTenantId] = useState('t1')
 
-  const onSubmit = (event) => {
-    event.preventDefault()
-    const token = `token-${Date.now()}`
-    dispatch(
-      loginSuccess({
-        email: email.trim(),
-        role,
-        tenantId,
-        token,
-      }),
-    )
-    navigate('/dashboard', { replace: true })
-  }
+  // Stable submit handler keeps future memoized form children from re-rendering each keystroke.
+  const onSubmit = useCallback(
+    (event) => {
+      event.preventDefault()
+      const token = `token-${Date.now()}`
+      dispatch(
+        loginSuccess({
+          email: email.trim(),
+          role,
+          tenantId,
+          token,
+        }),
+      )
+      navigate('/dashboard', { replace: true })
+    },
+    [dispatch, navigate, email, role, tenantId],
+  )
 
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />

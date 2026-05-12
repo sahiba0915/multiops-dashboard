@@ -1,3 +1,4 @@
+import { memo, useMemo } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { selectRole } from '../features/auth/authSlice'
@@ -9,10 +10,14 @@ const links = [
   { to: '/orders', label: 'Orders' },
 ]
 
-export default function Sidebar() {
+function Sidebar() {
   const role = useSelector(selectRole)
-  const allowedRoutes = ROLE_ROUTE_ACCESS[role] ?? []
-  const visibleLinks = links.filter((link) => allowedRoutes.includes(link.to))
+
+  // Recompute the nav list only when role changes — avoids refiltering on every render.
+  const visibleLinks = useMemo(() => {
+    const allowedRoutes = ROLE_ROUTE_ACCESS[role] ?? []
+    return links.filter((link) => allowedRoutes.includes(link.to))
+  }, [role])
 
   return (
     <aside className="w-full shrink-0 border-b border-slate-800 bg-slate-900 p-3 text-slate-100 sm:p-4 md:w-64 md:border-b-0 md:border-r">
@@ -35,3 +40,7 @@ export default function Sidebar() {
     </aside>
   )
 }
+
+// Sidebar only depends on role from the store; memo limits re-renders when unrelated
+// global state updates (e.g. API error banner) while role is unchanged.
+export default memo(Sidebar)

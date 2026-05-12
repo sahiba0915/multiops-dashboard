@@ -71,6 +71,7 @@ export default function OrdersPage() {
 
   const handlePageChange = useCallback((p) => dispatch(setOrdersPage(p)), [dispatch])
 
+  // Debounced search + status filter: stable handlers avoid needless child updates.
   const handleSearchKeyDown = useCallback(
     (e) => {
       if (e.key !== 'Enter') return

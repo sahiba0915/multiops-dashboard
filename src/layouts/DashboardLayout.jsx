@@ -1,8 +1,9 @@
+import { memo } from 'react'
 import { Outlet } from 'react-router-dom'
 import Sidebar from '../components/Sidebar'
 import Topbar from '../components/Topbar'
 
-export default function DashboardLayout() {
+function DashboardLayout() {
   return (
     <div className="flex min-h-screen flex-col bg-slate-100 md:flex-row">
       <Sidebar />
@@ -15,3 +16,7 @@ export default function DashboardLayout() {
     </div>
   )
 }
+
+// No props: when an ancestor re-renders without changing this layout’s inputs,
+// memo skips redundant work for Sidebar/Topbar shell (Outlet still updates internally).
+export default memo(DashboardLayout)
